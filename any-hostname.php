@@ -121,13 +121,23 @@ class AnyHostname {
 	 * TA-DAA, the actual filter function
 	 */
 	protected function filter_url($url) {
+		error_log("filter_url: URL = $url");
 
 		if (!$this->host_allowed($_SERVER['HTTP_HOST'])) {
 			return $url;
 		}
 
+		$debug_var = $_SERVER['HTTP_HOST'];
+		error_log("filter_url: HTTP_HOST = $debug_var");
+
+		$debug_var = $_SERVER['HTTPS'];
+		error_log("filter_url: HTTPS = $debug_var");
+
 		$parts = parse_url($url);
 		$host = apply_filters('any_hostname_host',  $_SERVER['HTTP_HOST']);
+
+		error_log("filter_url: \$host = $host");
+
 		$user_pass = $port = $query = $fragment = $path = $scheme = null;
 
 		if (isset($parts['user']) && $parts['user']) {
@@ -167,6 +177,8 @@ class AnyHostname {
 		}
 
 		$url = sprintf('%s://%s%s%s%s%s%s', $scheme, $user_pass, $host, $port, $path, $query, $fragment);
+
+		error_log("filter_url: \$url = $url");
 
 		return $url;
 	}
